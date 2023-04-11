@@ -14,22 +14,24 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 public class Index {
-    // Paths for actual index.
-    private final String DATA_PATH = "data/raw";
-    private final String INDEX_PATH = "data/index";
+    // Paths for actual data and indexes.
+    public static final String DATA_PATH = "data/raw";
+    public static final String INDEX_PATH = "data/index";
 
-    // Paths for testing index on small dataset.
-    private final String TEST_DATA_PATH = "data/test_raw";
-    private final String TEST_INDEX_PATH = "data/test_index";
+    // Data paths for testing index on small dataset.
+    public static final String TEST_DATA_PATH = "data/test_raw";
+    public static final String TEST_TRAIN_DATA_PATH = TEST_DATA_PATH + "/train";
+    public static final String TEST_TEST_DATA_PATH = TEST_DATA_PATH + "/test";
+    public static final String TEST_VAL_DATA_PATH = TEST_DATA_PATH + "/val";
 
-    public Index() throws IOException {
-        buildIndex(TEST_INDEX_PATH + "/train", TEST_DATA_PATH + "/train");
-        buildIndex(TEST_INDEX_PATH + "/test", TEST_DATA_PATH + "/test");
-        buildIndex(TEST_INDEX_PATH + "/val", TEST_DATA_PATH + "/val");
-    }
+    // Index paths for testing index on small dataset.
+    public static final String TEST_INDEX_PATH = "data/test_index";
+    public static final String TEST_TRAIN_INDEX_PATH = TEST_INDEX_PATH + "/train";
+    public static final String TEST_TEST_INDEX_PATH = TEST_INDEX_PATH + "/test";
+    public static final String TEST_VAL_INDEX_PATH = TEST_INDEX_PATH + "/val";
 
     // Builds an index from the files at the given path.
-    private void buildIndex(String indexPath, String articlePath) throws IOException {
+    public static void buildIndex(String indexPath, String articlePath) throws IOException {
         // Open the directory we will write the index to.
         Directory indexDir = FSDirectory.open(new File(indexPath).toPath());
 
@@ -57,6 +59,7 @@ public class Index {
 
             // Content of "article" field. The article is all text before @highlight.
             String article = textSplit[0].replaceAll("(?i)^.*?\\(CNN\\)[\\s-]*", "");
+            // todo: write something to remove the contributers at bottom of some articles.
 
             // Content of "summary" field. The summary is all text under @highlight.
             // Removes @highlight annotation, NEW: tag, and extra blank lines.
@@ -73,7 +76,7 @@ public class Index {
 
     // Adds a single document with id, article, and summary fields to the index.
     // Haven't implemented tokenization yet.
-    private void addDoc(IndexWriter w, String id, String article, String summary) throws IOException {
+    private static void addDoc(IndexWriter w, String id, String article, String summary) throws IOException {
         Document doc = new Document();
         doc.add(new StringField("id", id, Field.Store.YES));
         doc.add(new TextField("article", article, Field.Store.YES));
@@ -82,7 +85,7 @@ public class Index {
     }
 
     // Reads the file into a char[] array, then builds and returns it as a String.
-    private String getFileString(File file) throws IOException {
+    private static String getFileString(File file) throws IOException {
         FileReader reader = new FileReader(file);
         char[] chars = new char[(int) file.length()];
         reader.read(chars);
