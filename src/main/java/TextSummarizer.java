@@ -9,6 +9,7 @@ public class TextSummarizer {
             File testDir = new File(Index.TEST_INDEX_PATH);
             File valDir = new File(Index.VAL_INDEX_PATH);
 
+            // If the indexes are already created, these will not run.
             // Build a Lucene index for the training data if it does not exist.
             if (trainDir.list().length == 0) {
                 Index.buildIndex(Index.TRAIN_INDEX_PATH, Index.TRAIN_DATA_PATH);

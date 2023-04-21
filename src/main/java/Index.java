@@ -19,7 +19,7 @@ public class Index {
     public static final String TRAIN_DATA_PATH = DATA_PATH + "/train";
     public static final String TEST_DATA_PATH = DATA_PATH + "/test";
     public static final String VAL_DATA_PATH = DATA_PATH + "/val";
-    
+
     // Data paths for train, test, and val Lucene indexes.
     public static final String INDEX_PATH = "data/index";
     public static final String TRAIN_INDEX_PATH = INDEX_PATH + "/train";
@@ -54,9 +54,10 @@ public class Index {
             String[] textSplit = text.split("@highlight", 2);
 
             // Content of "article" field. The article is all text before @highlight.
-            // Removes information about contributors, which is not relevant for our purposes.
+            // Removes information about contributors, which is not relevant for us.
             String article = textSplit[0].replaceAll("(?i)^.*?\\(CNN\\)[\\s-]*", "");
-            article = article.replaceAll("(?i)^CNN's.*contributed to this report.*$", "");
+            article = article.replaceAll("(?i).*contributed to this report.*(\r\n|\r|\n)?", "");
+            article.trim();
 
             // Content of "summary" field. The summary is all text under @highlight.
             // Removes @highlight annotation, NEW: tag, and extra blank lines.
@@ -64,6 +65,7 @@ public class Index {
             summary = summary.replaceAll("@highlight", "");
             summary = summary.replaceAll("\\R+", ". ");
             summary = summary.replaceAll("NEW: ", "");
+            summary.trim();
 
             // Adds the document to the index.
             addDoc(writer, id, article, summary);

@@ -10,10 +10,16 @@ import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
+/**
+ * Run TextSummarizer.java first, the Lucene indexes must be built first.
+ * Gets the total document counts and prints random docs from each index.
+ * Run this to make sure your Lucene indexes were built correctly.
+ * There should be 92604 total docs, which took ~15 minutes to build in TextSummarizer.
+ */
+
 public class IndexTest {
     public static void main(String[] args) {
         try {
-            // Run TextSummarizer.java first, the Lucene indexes must be built first.
             // Open the /train, /test, and /val directories with Lucene.
             FSDirectory trainDir = FSDirectory.open(new File(Index.TRAIN_INDEX_PATH).toPath());
             FSDirectory testDir = FSDirectory.open(new File(Index.TEST_INDEX_PATH).toPath());
