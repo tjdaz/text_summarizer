@@ -55,9 +55,11 @@ public class Index {
 
             // Content of "article" field. The article is all text before @highlight.
             // Removes information about contributors, which is not relevant for us.
+            // Removes read more lines which are essentially links to other articles.
             String article = textSplit[0].replaceAll("(?i)^.*?\\(CNN\\)[\\s-]*", "");
             article = article.replaceAll("(?i).*contributed to this report.*(\r\n|\r|\n)?", "");
-            article.trim();
+            article = article.replaceAll("(?i)^\\s*READ MORE:.*(\r\n|\r|\n)?", "");
+            article = article.trim();
 
             // Content of "summary" field. The summary is all text under @highlight.
             // Removes @highlight annotation, NEW: tag, and extra blank lines.
@@ -65,7 +67,8 @@ public class Index {
             summary = summary.replaceAll("@highlight", "");
             summary = summary.replaceAll("\\R+", ". ");
             summary = summary.replaceAll("NEW: ", "");
-            summary.trim();
+            summary = summary.trim();
+            summary += ".";
 
             // Adds the document to the index.
             addDoc(writer, id, article, summary);
